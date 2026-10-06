@@ -3,261 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WhatsApp Bulk Poster Sender</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f2f5;
-            margin: 0;
-            padding: 15px;
-        }
-        .container {
-            max-width: 650px;
-            margin: auto;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        h2 { text-align: center; color: #075e54; margin-bottom: 20px; }
-        label { font-weight: bold; margin-top: 15px; display: block; color: #333; }
-        textarea {
-            width: 100%;
-            padding: 10px;
-            margin-top: 5px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-sizing: border-box;
-            font-size: 14px;
-        }
-        
-        /* File Upload Styling */
-        .file-upload-box {
-            margin-top: 15px;
-            padding: 15px;
-            background: #eef8f3;
-            border: 2px dashed #25d366;
-            border-radius: 8px;
-            text-align: center;
-        }
-        input[type="file"] {
-            margin-top: 10px;
-            width: 100%;
-            font-size: 15px;
-        }
-        .poster-preview {
-            max-width: 100%;
-            max-height: 200px;
-            border-radius: 6px;
-            display: none;
-            margin: 10px auto 0 auto;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-        }
-        
-        .btn-sync {
-            width: 100%;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 12px;
-            font-size: 16px;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 15px;
-            font-weight: bold;
-        }
-        
-        .cards-container {
-            margin-top: 15px;
-            max-height: 480px;
-            overflow-y: auto;
-            border: 1px solid #ddd;
-            padding: 10px;
-            border-radius: 8px;
-            background: #fafafa;
-        }
-        .store-card {
-            background: #ffffff;
-            border: 1px solid #e0e0e0;
-            border-left: 5px solid #25d366;
-            padding: 12px;
-            margin-bottom: 12px;
-            border-radius: 6px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 10px;
-        }
-        .store-card.sent {
-            border-left-color: #888;
-            background-color: #eef2f0;
-        }
-        .store-info { flex: 1; }
-        .store-title { font-size: 16px; color: #075e54; font-weight: bold; }
-        .store-detail { font-size: 13px; color: #555; margin-top: 3px; }
-        .btn-wa-send {
-            background-color: #25d366;
-            color: white;
-            border: none;
-            padding: 10px 16px;
-            font-size: 14px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            white-space: nowrap;
-        }
-        .btn-wa-send.sent-btn { background-color: #6c757d; }
-        .status-tracker { text-align: center; font-weight: bold; margin-top: 15px; color: #075e54; }
-    </style>
+    <title>NSI VEGETABLES</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="container">
-    <h2>WhatsApp Bulk Poster Sender</h2>
-
-    <button class="btn-sync" onclick="fetchFromSheet()">Google Sheet-ൽ നിന്ന് ഡാറ്റ കൊണ്ടുവരിക</button>
-
-    <label for="message">സന്ദേശം (Message):</label>
-    <textarea id="message" rows="3" placeholder="സന്ദേശം ഇവിടെ ടൈപ്പ് ചെയ്യുക..."></textarea>
-
-    <!-- ഫയൽ സെലക്ട് ചെയ്യാനുള്ള പ്രധാന ബോക്സ് -->
-    <div class="file-upload-box">
-        <label style="margin-top:0; color:#075e54; font-size: 16px;">📁 ഫോണിൽ നിന്ന് പോസ്റ്റർ സെലക്ട് ചെയ്യുക:</label>
-        <input type="file" id="fileInput" accept="image/*" onchange="previewFile(event)">
-        <img id="posterPreview" class="poster-preview" alt="Poster Preview">
+    <div class="header">
+        <h1>NSI VEGETABLES PATTAMBI</h1>
+        <p>Fresh Vegetables Delivered</p>
     </div>
 
-    <div id="statusTracker" class="status-tracker"></div>
+    <div class="container">
+        <div class="products-section">
+            <div id="products">Loading products...</div>
+        </div>
 
-    <label>കടകളുടെ വിവരങ്ങൾ:</label>
-    <div id="cardsContainer" class="cards-container">
-        <p style="text-align: center; color: #888; font-size: 13px;">ഡാറ്റ ലോഡ് ചെയ്യാൻ മുകളിലെ ബട്ടൺ അമർത്തുക...</p>
+        <div class="cart-section">
+            <h2>🛒 Cart</h2>
+            <div id="cart-items">Cart Empty</div>
+            <div class="cart-total" id="cart-total">Total ₹0</div>
+
+            <div class="order-form">
+                <input type="text" id="cust-name" placeholder="Name" required>
+                <input type="tel" id="cust-phone" placeholder="Phone" required>
+                <textarea id="cust-address" placeholder="Address" rows="3" required></textarea>
+                <button type="button" onclick="sendWhatsAppOrder()">Place Order</button>
+            </div>
+        </div>
     </div>
-</div>
 
-<script>
-    const CSV_URL = "https://docs.google.com/spreadsheets/d/1MZFEXa8rNwYPGA5ptfcKTEoHWCE-uVVpL0PvE2CpmMA/gviz/tq?tqx=out:csv";
-    let fetchedStores = [];
-
-    function previewFile(event) {
-        const preview = document.getElementById('posterPreview');
-        const file = event.target.files[0];
-        if (file) {
-            preview.src = URL.createObjectURL(file);
-            preview.style.display = 'block';
-        } else {
-            preview.style.display = 'none';
-        }
-    }
-
-    function fetchFromSheet() {
-        document.getElementById("statusTracker").innerText = "Google Sheet-ൽ നിന്ന് ഡാറ്റ എടുക്കുന്നു...";
-        fetch(CSV_URL)
-            .then(res => res.text())
-            .then(csvText => parseCSVAndFill(csvText))
-            .catch(err => {
-                alert("ഡാറ്റ ലോഡ് ചെയ്യുന്നതിൽ പിശക് സംഭവിച്ചു!");
-                document.getElementById("statusTracker").innerText = "";
-            });
-    }
-
-    function parseCSVAndFill(csvText) {
-        let lines = csvText.split('\n');
-        fetchedStores = [];
-
-        for (let i = 1; i < lines.length; i++) {
-            let row = lines[i].split(',').map(cell => cell.replace(/^"|"$/g, '').trim());
-            if (row.length < 1 || !row.join('')) continue;
-
-            let name = row[0] || "കട";
-            let type = row[1] || "";
-            let place = row[2] || "";
-            let phone = row[4] || "";
-
-            if (!phone) {
-                row.forEach(cell => {
-                    let cleanNum = cell.replace(/[^0-9]/g, '');
-                    if (cleanNum.length >= 10 && !phone) phone = cleanNum;
-                });
-            }
-
-            if (name || phone) fetchedStores.push({ id: i, name, type, place, phone, isSent: false });
-        }
-
-        renderCards();
-    }
-
-    function renderCards() {
-        const container = document.getElementById("cardsContainer");
-        if (fetchedStores.length === 0) {
-            container.innerHTML = '<p style="text-align: center; color: red;">കടകളുടെ വിവരങ്ങൾ ഒന്നും ലഭിച്ചില്ല.</p>';
-            return;
-        }
-
-        container.innerHTML = fetchedStores.map((store, index) => {
-            let cleanPhone = store.phone ? store.phone.replace(/[^0-9]/g, '') : '';
-            if (cleanPhone.length === 10 && !cleanPhone.startsWith('91')) {
-                cleanPhone = '91' + cleanPhone;
-            }
-
-            return `
-                <div class="store-card ${store.isSent ? 'sent' : ''}" id="card-${index}">
-                    <div class="store-info">
-                        <div class="store-title">${store.name} ${store.type ? '<span style="font-size:12px; color:#666;">(' + store.type + ')</span>' : ''}</div>
-                        <div class="store-detail">📍 സ്ഥലം: ${store.place || 'നൽകിയിട്ടില്ല'}</div>
-                        <div class="store-detail">📞 ഫോൺ: ${cleanPhone ? cleanPhone : '<span style="color:red;">നമ്പർ ലഭ്യമല്ല</span>'}</div>
-                    </div>
-                    <div>
-                        ${cleanPhone ? 
-                            `<button class="btn-wa-send ${store.isSent ? 'sent-btn' : ''}" id="btn-${index}" onclick="sendMessage(${index}, '${cleanPhone}')">
-                                ${store.isSent ? '✔ Sent' : '💬 Send'}
-                            </button>` : 
-                            `<button class="btn-wa-send" style="background:#ccc; cursor:not-allowed;" disabled>No Number</button>`
-                        }
-                    </div>
-                </div>
-            `;
-        }).join('');
-
-        document.getElementById("statusTracker").innerText = `ആകെ ${fetchedStores.length} കടകൾ കാണിക്കുന്നു.`;
-    }
-
-    async function sendMessage(index, phone) {
-        const messageText = document.getElementById("message").value.trim();
-        const fileInput = document.getElementById("fileInput");
-
-        if (!messageText && (!fileInput.files || fileInput.files.length === 0)) {
-            alert("ദയവായി ഒരു സന്ദേശം ടൈപ്പ് ചെയ്യുകയോ പോസ്റ്റർ സെലക്ട് ചെയ്യുകയോ ചെയ്യുക!");
-            return;
-        }
-
-        fetchedStores[index].isSent = true;
-        
-        const cardElem = document.getElementById(`card-${index}`);
-        const btnElem = document.getElementById(`btn-${index}`);
-        if (cardElem) cardElem.classList.add('sent');
-        if (btnElem) {
-            btnElem.classList.add('sent-btn');
-            btnElem.innerText = '✔ Sent';
-        }
-
-        if (fileInput.files && fileInput.files.length > 0 && navigator.canShare && navigator.canShare({ files: fileInput.files })) {
-            try {
-                await navigator.share({
-                    files: [fileInput.files[0]],
-                    text: messageText
-                });
-                return;
-            } catch (err) {
-                console.log("Direct share cancelled, opening WhatsApp link instead.");
-            }
-        }
-
-        const url = `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(messageText)}`;
-        window.open(url, '_blank');
-    }
-</script>
-
+    <script src="script.js"></script>
 </body>
 </html>
