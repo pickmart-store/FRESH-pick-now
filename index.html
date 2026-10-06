@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fresh Mart - Groceries Delivered</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #10b981;
+            --primary-dark: #059669;
+            --bg-light: #f3f4f6;
+            --card-bg: #ffffff;
+            --text-main: #1f2937;
+            --text-sub: #6b7280;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #e5e7eb;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .mobile-container {
+            width: 100%;
+            max-width: 412px;
+            height: 870px;
+            background-color: var(--bg-light);
+            border-radius: 35px;
+            box-shadow: 0 20px 30px rgba(0,0,0,0.15);
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            border: 8px solid #333;
+        }
+
+        /* Top Status Bar */
+        .status-bar {
+            height: 35px;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            font-weight: 600;
+            background: transparent;
+            z-index: 100;
+        }
+
+        .screen {
+            display: none;
+            flex: 1;
+            overflow-y: auto;
+            padding-bottom: 70px;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        /* Bottom Navigation Bar */
+        .bottom-nav {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 65px;
+            background-color: #ffffff;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-top: 1px solid #e5e7eb;
+            z-index: 10;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text-sub);
+            text-decoration: none;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .nav-item i {
+            font-size: 18px;
+            margin-bottom: 3px;
+        }
+
+        .nav-item.active {
+            color: var(--primary-color);
+        }
+
+        /* Buttons & Components */
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 25px;
+            width: 100%;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        /* PAGE 1: Welcome */
+        #p1-welcome {
+            background: linear-gradient(180deg, #e6fffa 0%, #ffffff 100%);
+            padding: 20px;
+            text-align: left;
+        }
+        .hero-img {
+            width: 100%;
+            height: 280px;
+            object-fit: contain;
+            margin: 20px 0;
+        }
+
+        /* PAGE 2: Home/Shop */
+        .header-location {
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+        }
+        .search-box {
+            margin: 10px 20px;
+            padding: 10px 15px;
+            background: #fff;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .search-box input {
+            border: none;
+            outline: none;
+            width: 100%;
+        }
+        .banner {
+            margin: 10px 20px;
+            background: #d1fae5;
+            border-radius: 15px;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .grid-categories {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            padding: 10px 20px;
+            text-align: center;
+            font-size: 12px;
+        }
+        .cat-card {
+            background: #fff;
+            padding: 10px;
+            border-radius: 12px;
+        }
+        .products-horizontal {
+            display: flex;
+            gap: 15px;
+            padding: 10px 20px;
+            overflow-x: auto;
+        }
+        .product-card {
+            min-width: 110px;
+            background: #fff;
+            padding: 10px;
+            border-radius: 12px;
+            position: relative;
+        }
+
+        /* PAGE 3: Categories */
+        .category-list-item {
+            background: #fff;
+            margin: 10px 20px;
+            padding: 15px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* PAGE 4: Details */
+        .details-img {
+            width: 100%;
+            height: 200px;
+            object-fit: contain;
+            background: #fff;
+        }
+
+        /* PAGE 5: Cart */
+        .cart-item {
+            background: #fff;
+            margin: 10px 20px;
+            padding: 12px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .qty-btn {
+            background: #e5e7eb;
+            border: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* PAGE 6: Checkout */
+        .checkout-section {
+            background: #fff;
+            margin: 10px 20px;
+            padding: 15px;
+            border-radius: 12px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="mobile-container">
+    <!-- Status Bar -->
+    <div class="status-bar">
+        <span>9:41</span>
+        <div>
+            <i class="fas fa-signal"></i>
+            <i class="fas fa-wifi"></i>
+            <i class="fas fa-battery-full"></i>
+        </div>
+    </div>
+
+    <!-- Page 1: Welcome/Landing -->
+    <div id="p1-welcome" class="screen active">
+        <div style="padding-top: 40px;">
+            <h1 style="font-size: 28px; color: var(--text-main);">Fresh Groceries<br>Delivered to<br>Your Doorstep</h1>
+            <p style="color: var(--text-sub); margin-top: 10px; font-size: 14px;">Quality products, fast delivery and best prices everyday.</p>
+        </div>
+        <!-- Replace src with your image URL -->
+        <img src="https://via.placeholder.com/250x250?text=Grocery+Basket" alt="Grocery Basket" class="hero-img">
+        <button class="btn-primary" onclick="showScreen('p2-home')">
+            Get Started <i class="fas fa-arrow-right"></i>
+        </button>
+        <div style="text-align: center; margin-top: 15px; font-size: 12px; color: var(--text-sub);">
+            Trusted by 2M+ Happy Users
+        </div>
+    </div>
+
+    <!-- Page 2: Home Screen -->
+    <div id="p2-home" class="screen">
+        <div class="header-location">
+            <div><i class="fas fa-map-marker-alt" style="color: var(--primary-color);"></i> Deliver to: <b>Home - 123 Green St</b></div>
+            <i class="far fa-bell"></i>
+        </div>
+        <div class="search-box">
+            <i class="fas fa-search" style="color: #9ca3af;"></i>
+            <input type="text" placeholder="Search for products...">
+        </div>
+        <div class="banner">
+            <div>
+                <h3 style="color: #065f46;">Fresh Vegetables</h3>
+                <p style="font-size: 12px; color: #047857;">Up to 30% Off</p>
+                <button style="background: var(--primary-color); color: #fff; border:none; padding: 5px 10px; border-radius: 5px; margin-top: 5px; font-size: 11px;">Shop Now</button>
+            </div>
+            <img src="https://via.placeholder.com/80?text=Veggies" style="border-radius: 10px;">
+        </div>
+        <div class="grid-categories">
+            <div class="cat-card"><i class="fas fa-apple-alt" style="color: #ef4444; font-size: 20px;"></i><br>Fruits</div>
+            <div class="cat-card"><i class="fas fa-carrot" style="color: #f97316; font-size: 20px;"></i><br>Vegetables</div>
+            <div class="cat-card"><i class="fas fa-cheese" style="color: #eab308; font-size: 20px;"></i><br>Dairy</div>
+            <div class="cat-card"><i class="fas fa-wine-bottle" style="color: #3b82f6; font-size: 20px;"></i><br>Beverages</div>
+        </div>
+        <div style="padding: 10px 20px; font-weight: bold; display: flex; justify-content: space-between;">
+            Flash Deals <span>02 : 45 : 30</span>
+        </div>
+        <div class="products-horizontal">
+            <div class="product-card" onclick="showScreen('p4-details')">
+                <img src="https://via.placeholder.com/60?text=Avocado" width="100%">
+                <p style="font-size: 12px; font-weight: bold;">Avocado</p>
+                <p style="font-size: 11px; color: var(--primary-color);">$3.45</p>
+            </div>
+            <div class="product-card">
+                <img src="https://via.placeholder.com/60?text=Banana" width="100%">
+                <p style="font-size: 12px; font-weight: bold;">Banana</p>
+                <p style="font-size: 11px; color: var(--primary-color);">$1.25</p>
+            </div>
+            <div class="product-card">
+                <img src="https://via.placeholder.com/60?text=Apple" width="100%">
+                <p style="font-size: 12px; font-weight: bold;">Red Apple</p>
+                <p style="font-size: 11px; color: var(--primary-color);">$2.45</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page 3: Categories -->
+    <div id="p3-categories" class="screen">
+        <h3 style="padding: 15px 20px; text-align: center;">Categories</h3>
+        <div class="banner">
+            <div>
+                <h4>Big Savings</h4>
+                <p style="font-size: 11px;">On Everyday Essentials</p>
+            </div>
+        </div>
+        <div class="category-list-item">
+            <div><b>Fruits & Vegetables</b><br><small style="color: #6b7280;">120+ Items</small></div>
+            <i class="fas fa-chevron-right"></i>
+        </div>
+        <div class="category-list-item">
+            <div><b>Dairy & Eggs</b><br><small style="color: #6b7280;">85+ Items</small></div>
+            <i class="fas fa-chevron-right"></i>
+        </div>
+        <div class="category-list-item">
+            <div><b>Snacks & Munchies</b><br><small style="color: #6b7280;">150+ Items</small></div>
+            <i class="fas fa-chevron-right"></i>
+        </div>
+        <div class="category-list-item">
+            <div><b>Beverages</b><br><small style="color: #6b7280;">60+ Items</small></div>
+            <i class="fas fa-chevron-right"></i>
+        </div>
+    </div>
+
+    <!-- Page 4: Product Details -->
+    <div id="p4-details" class="screen">
+        <div style="padding: 15px; display: flex; justify-content: space-between;">
+            <i class="fas fa-arrow-left" onclick="showScreen('p2-home')" style="cursor: pointer;"></i>
+            <b>Product Details</b>
+            <i class="far fa-heart"></i>
+        </div>
+        <img src="https://via.placeholder.com/200?text=Fresh+Avocado" class="details-img">
+        <div style="padding: 20px;">
+            <h2>Fresh Avocado</h2>
+            <p style="color: #6b7280; font-size: 12px;">1kg</p>
+            <h2 style="color: var(--primary-color); margin: 10px 0;">$3.45 <span style="text-decoration: line-through; color: #9ca3af; font-size: 14px;">$4.20</span> <span style="font-size: 12px; color: red;">18% OFF</span></h2>
+            <p style="font-size: 13px; color: #4b5563;">Creamy, nutritious and perfectly ripe avocados.</p>
+            
+            <div style="margin-top: 30px; display: flex; gap: 15px;">
+                <div style="display: flex; align-items: center; gap: 10px; background: #e5e7eb; padding: 10px; border-radius: 10px;">
+                    <button class="qty-btn">-</button>
+                    <span>1</span>
+                    <button class="qty-btn">+</button>
+                </div>
+                <button class="btn-primary" onclick="showScreen('p5-cart')">Add to Cart</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page 5: My Cart -->
+    <div id="p5-cart" class="screen">
+        <h3 style="padding: 15px 20px; text-align: center;">My Cart</h3>
+        <div class="cart-item">
+            <div><b>Banana</b><br><small>$1.25</small></div>
+            <div><button class="qty-btn">-</button> 1 <button class="qty-btn">+</button></div>
+        </div>
+        <div class="cart-item">
+            <div><b>Milk Full Cream</b><br><small>$1.80</small></div>
+            <div><button class="qty-btn">-</button> 1 <button class="qty-btn">+</button></div>
+        </div>
+        <div class="cart-item">
+            <div><b>Whole Wheat Bread</b><br><small>$2.25</small></div>
+            <div><button class="qty-btn">-</button> 1 <button class="qty-btn">+</button></div>
+        </div>
+        <div style="padding: 20px; margin-top: 30px;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;"><span>Subtotal</span><span>$5.30</span></div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;"><span>Delivery Fee</span><span>$1.00</span></div>
+            <hr style="margin: 10px 0;">
+            <div style="display: flex; justify-content: space-between; font-weight: bold; margin-bottom: 20px;"><span>Total</span><span>$6.30</span></div>
+            <button class="btn-primary" onclick="showScreen('p6-checkout')">Proceed to Checkout</button>
+        </div>
+    </div>
+
+    <!-- Page 6: Checkout -->
+    <div id="p6-checkout" class="screen">
+        <h3 style="padding: 15px 20px; text-align: center;">Checkout</h3>
+        <div class="checkout-section">
+            <p style="font-size: 12px; color: #6b7280;">Delivery Address</p>
+            <b>Home</b>
+            <p style="font-size: 12px; color: #4b5563;">123 Green Street, Green City, GC 12345</p>
+        </div>
+        <div class="checkout-section">
+            <p style="font-size: 12px; color: #6b7280;">Payment Method</p>
+            <p><b><i class="fab fa-cc-visa"></i> **** **** **** 4242</b></p>
+        </div>
+        <div style="padding: 20px; margin-top: 40px;">
+            <div style="display: flex; justify-content: space-between; font-weight: bold; margin-bottom: 15px;">
+                <span>Total Amount</span>
+                <span>$6.30</span>
+            </div>
+            <button class="btn-primary" onclick="alert('Order Placed Successfully!')">Place Order</button>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <div class="nav-item active" onclick="showScreen('p2-home')">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </div>
+        <div class="nav-item" onclick="showScreen('p3-categories')">
+            <i class="fas fa-th-large"></i>
+            <span>Categories</span>
+        </div>
+        <div class="nav-item" onclick="showScreen('p5-cart')">
+            <i class="fas fa-shopping-cart"></i>
+            <span>Cart</span>
+        </div>
+        <div class="nav-item" onclick="showScreen('p6-checkout')">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showScreen(screenId) {
+        const screens = document.querySelectorAll('.screen');
+        screens.forEach(screen => screen.classList.remove('active'));
+        document.getElementById(screenId).classList.add('active');
+    }
+</script>
+
+</body>
+</html>
