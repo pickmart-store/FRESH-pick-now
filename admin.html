@@ -1,176 +1,174 @@
 <!DOCTYPE html>
-<html lang="ml">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - Fresh Store</title>
+    <title>Store Admin Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root { var(--primary): #059669; }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
-        body { background: #f1f5f9; padding: 20px; color: #0f172a; }
-        .container { max-width: 800px; margin: 0 auto; }
-        .card { background: #fff; padding: 20px; border-radius: 12px; border: 1px solid #cbd5e1; margin-bottom: 20px; }
-        h2, h3 { margin-bottom: 15px; color: #059669; }
-        .form-group { margin-bottom: 12px; }
-        .form-group label { display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; }
-        .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; }
-        .btn { background: #059669; color: #fff; border: none; padding: 10px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; }
-        .btn-danger { background: #ef4444; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { border: 1px solid #cbd5e1; padding: 10px; text-align: left; font-size: 13px; }
-        th { background: #e2e8f0; }
-    </style>
 </head>
-<body>
+<body class="bg-gray-100 font-sans">
 
-<div class="container">
-    <h2><i class="fas fa-cog"></i> Fresh Store Admin Dashboard</h2>
+    <!-- Admin Layout -->
+    <div class="flex h-screen overflow-hidden">
+        
+        <!-- Sidebar -->
+        <div class="w-64 bg-gray-900 text-white hidden md:flex flex-col p-6">
+            <h2 class="text-2xl font-black text-emerald-400 tracking-wider">ADMIN PANEL</h2>
+            <nav class="mt-8 space-y-4">
+                <a href="#" class="flex items-center space-x-3 text-emerald-400 font-medium"><i class="fa-solid fa-chart-pie"></i><span>Dashboard</span></a>
+            </nav>
+        </div>
 
-    <!-- ADD CATEGORY -->
-    <div class="card">
-        <h3>1. Add New Category</h3>
-        <div style="display: flex; gap: 10px;">
-            <input type="text" id="cat-input" placeholder="e.g. Vegetables, Grocery, Drinks" style="flex: 1; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px;">
-            <button class="btn" onclick="addCategory()">Save Category</button>
+        <!-- Main Content Area -->
+        <div class="flex-1 flex flex-col overflow-y-auto">
+            <header class="bg-white shadow-sm h-16 flex items-center justify-between px-8">
+                <h1 class="text-xl font-bold text-gray-800">Store Management Dashboard</h1>
+                <a href="index.html" target="_blank" class="text-sm bg-emerald-100 text-emerald-700 px-4 py-2 rounded-xl font-medium hover:bg-emerald-200"><i class="fa-solid fa-external-link mr-2"></i>View Live Store</a>
+            </header>
+
+            <div class="p-8 max-w-6xl w-full mx-auto space-y-8">
+                
+                <!-- Add Category Card -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">Add New Category</h3>
+                    <div class="flex space-x-4">
+                        <input type="text" id="newCategoryInput" placeholder="Category Name (e.g. Electronics, Fashion)" class="flex-1 p-3 bg-gray-50 border rounded-xl text-sm focus:ring-2 focus:ring-emerald-500">
+                        <button onclick="addCategory()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-xl font-medium text-sm transition-all">Add Category</button>
+                    </div>
+                </div>
+
+                <!-- Add Product Card -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">Add New Product</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <input type="text" id="prodName" placeholder="Product Name" class="p-3 bg-gray-50 border rounded-xl text-sm">
+                        
+                        <select id="prodCategory" class="p-3 bg-gray-50 border rounded-xl text-sm">
+                            <option value="">Select Category</option>
+                        </select>
+
+                        <select id="prodUnitType" onchange="toggleUnitFields()" class="p-3 bg-gray-50 border rounded-xl text-sm">
+                            <option value="piece">Piece (সংখ্যা / pcs)</option>
+                            <option value="kg">Kilogram (Kg / Grams)</option>
+                        </select>
+
+                        <div id="kgFields" class="hidden flex space-x-2">
+                            <input type="number" id="prodMinQty" placeholder="Min Qty (e.g. 0.5 for 500g)" step="0.1" class="w-full p-3 bg-gray-50 border rounded-xl text-sm">
+                        </div>
+
+                        <input type="number" id="prodPrice" placeholder="Regular Price (₹)" class="p-3 bg-gray-50 border rounded-xl text-sm">
+                        <input type="number" id="prodOfferPrice" placeholder="Offer Price (₹) - Optional" class="p-3 bg-gray-50 border rounded-xl text-sm">
+                        <input type="text" id="prodImage" placeholder="Image URL (Unsplash or direct image link)" class="md:col-span-2 p-3 bg-gray-50 border rounded-xl text-sm">
+                    </div>
+                    <button onclick="addProduct()" class="mt-6 w-full bg-gray-900 hover:bg-emerald-600 text-white py-3 rounded-xl font-medium text-sm transition-all">Publish Product</button>
+                </div>
+
+                <!-- Existing Products List -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">Manage Products</h3>
+                    <div id="adminProductsList" class="space-y-3">
+                        <!-- Dynamic items -->
+                    </div>
+                </div>
+
+            </div>
         </div>
     </div>
 
-    <!-- ADD PRODUCT -->
-    <div class="card">
-        <h3>2. Add New Product</h3>
-        <div class="form-group">
-            <label>Category</label>
-            <select id="prod-category"></select>
-        </div>
-        <div class="form-group">
-            <label>Product Name</label>
-            <input type="text" id="prod-name" placeholder="e.g. Tomato, Rice">
-        </div>
-        <div class="form-group">
-            <label>Product Image Link (URL)</label>
-            <input type="text" id="prod-img" placeholder="Paste image web URL">
-        </div>
-        <div class="form-group">
-            <label>Measurement Unit (e.g., 250g, 500g, 1 Kg, 1 Pc)</label>
-            <input type="text" id="prod-unit" placeholder="e.g. 500g or 1 Kg">
-        </div>
-        <div class="form-group">
-            <label>Price (₹)</label>
-            <input type="number" id="prod-price" placeholder="Enter price in ₹">
-        </div>
-        <div class="form-group">
-            <label>Stock Count</label>
-            <input type="number" id="prod-stock" placeholder="Initial stock quantity">
-        </div>
-        <button class="btn" onclick="addProduct()">Add Product to Store</button>
-    </div>
+    <!-- Admin JavaScript Logic -->
+    <script>
+        let categories = JSON.parse(localStorage.getItem('store_categories')) || ["Groceries", "Fashion", "Electronics"];
+        let products = JSON.parse(localStorage.getItem('store_products')) || [];
 
-    <!-- MANAGE PRODUCTS LIST -->
-    <div class="card">
-        <h3>3. Current Inventory & Stock List</h3>
-        <table>
-            <thead>
-                <tr>
-                    <th>Image</th>
-                    <th>Name</th>
-                    <th>Category</th>
-                    <th>Unit</th>
-                    <th>Price</th>
-                    <th>Stock</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody id="inventory-table"></tbody>
-        </table>
-    </div>
-</div>
-
-<script>
-    let categories = JSON.parse(localStorage.getItem('fm_categories')) || ['Vegetables', 'Grocery', 'Fruits'];
-    let products = JSON.parse(localStorage.getItem('fm_products')) || [];
-
-    window.onload = function() {
-        loadCategoryDropdown();
-        renderInventoryTable();
-    };
-
-    function loadCategoryDropdown() {
-        const select = document.getElementById('prod-category');
-        select.innerHTML = '';
-        categories.forEach(c => {
-            if(c !== 'All') select.innerHTML += `<option value="${c}">${c}</option>`;
-        });
-    }
-
-    function addCategory() {
-        let name = document.getElementById('cat-input').value.trim();
-        if(name && !categories.includes(name)) {
-            categories.push(name);
-            localStorage.setItem('fm_categories', JSON.stringify(categories));
-            loadCategoryDropdown();
-            document.getElementById('cat-input').value = '';
-            alert('Category Added!');
-        }
-    }
-
-    function addProduct() {
-        let category = document.getElementById('prod-category').value;
-        let name = document.getElementById('prod-name').value;
-        let img = document.getElementById('prod-img').value;
-        let unit = document.getElementById('prod-unit').value;
-        let price = parseFloat(document.getElementById('prod-price').value);
-        let stock = parseInt(document.getElementById('prod-stock').value);
-
-        if(!name || isNaN(price) || !unit || isNaN(stock)) {
-            alert('Please complete all product fields.');
-            return;
+        function updateCategoryDropdown() {
+            const select = document.getElementById('prodCategory');
+            let html = `<option value="">Select Category</option>`;
+            categories.forEach(cat => {
+                html += `<option value="${cat}">${cat}</option>`;
+            });
+            select.innerHTML = html;
         }
 
-        let newProd = {
-            id: Date.now(),
-            name, category, price, unit, stock,
-            img: img || 'https://via.placeholder.com/100'
-        };
-
-        products.push(newProd);
-        localStorage.setItem('fm_products', JSON.stringify(products));
-        renderInventoryTable();
-        alert('Product successfully added to the main store!');
-
-        document.getElementById('prod-name').value = '';
-        document.getElementById('prod-img').value = '';
-        document.getElementById('prod-unit').value = '';
-        document.getElementById('prod-price').value = '';
-        document.getElementById('prod-stock').value = '';
-    }
-
-    function deleteProduct(id) {
-        if(confirm('Are you sure you want to delete this product?')) {
-            products = products.filter(p => p.id !== id);
-            localStorage.setItem('fm_products', JSON.stringify(products));
-            renderInventoryTable();
+        function addCategory() {
+            let catName = document.getElementById('newCategoryInput').value.trim();
+            if(!catName) return alert('Enter category name');
+            if(categories.includes(catName)) return alert('Category already exists');
+            
+            categories.push(catName);
+            localStorage.setItem('store_categories', JSON.stringify(categories));
+            document.getElementById('newCategoryInput').value = '';
+            updateCategoryDropdown();
+            alert('Category added successfully!');
         }
-    }
 
-    function renderInventoryTable() {
-        const table = document.getElementById('inventory-table');
-        table.innerHTML = '';
-        products.forEach(p => {
-            table.innerHTML += `
-                <tr>
-                    <td><img src="${p.img}" width="35" height="35" style="object-fit:contain;"></td>
-                    <td><b>${p.name}</b></td>
-                    <td>${p.category}</td>
-                    <td>${p.unit}</td>
-                    <td>₹${p.price}</td>
-                    <td><b>${p.stock}</b></td>
-                    <td><button class="btn btn-danger" onclick="deleteProduct(${p.id})">Delete</button></td>
-                </tr>
-            `;
-        });
-    }
-</script>
+        function toggleUnitFields() {
+            let unitType = document.getElementById('prodUnitType').value;
+            let kgFields = document.getElementById('kgFields');
+            if(unitType === 'kg') {
+                kgFields.classList.remove('hidden');
+            } else {
+                kgFields.classList.add('hidden');
+            }
+        }
 
+        function addProduct() {
+            let name = document.getElementById('prodName').value;
+            let category = document.getElementById('prodCategory').value;
+            let unitType = document.getElementById('prodUnitType').value;
+            let minQty = unitType === 'kg' ? parseFloat(document.getElementById('prodMinQty').value) || 0.5 : 1;
+            let price = parseFloat(document.getElementById('prodPrice').value);
+            let offerPrice = parseFloat(document.getElementById('prodOfferPrice').value) || null;
+            let image = document.getElementById('prodImage').value;
+
+            if(!name || !category || !price || !image) {
+                alert('Please fill out all required fields!');
+                return;
+            }
+
+            let newProd = {
+                id: Date.now(),
+                name, category, unitType, minQty, price, offerPrice, image
+            };
+
+            products.push(newProd);
+            localStorage.setItem('store_products', JSON.stringify(products));
+            alert('Product published successfully!');
+            location.reload();
+        }
+
+        function renderAdminProducts() {
+            let list = document.getElementById('adminProductsList');
+            if(products.length === 0) {
+                list.innerHTML = `<p class="text-gray-400 text-sm">No products added yet.</p>`;
+                return;
+            }
+            let html = '';
+            products.forEach((p, index) => {
+                html += `
+                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-xl border">
+                        <div class="flex items-center space-x-3">
+                            <img src="${p.image}" class="w-10 h-10 object-cover rounded-lg">
+                            <div>
+                                <h4 class="font-bold text-sm text-gray-800">${p.name}</h4>
+                                <p class="text-xs text-gray-500">${p.category} | ₹${p.price} (${p.unitType})</p>
+                            </div>
+                        </div>
+                        <button onclick="deleteProduct(${index})" class="text-red-500 hover:text-red-700 text-sm"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                `;
+            });
+            list.innerHTML = html;
+        }
+
+        function deleteProduct(index) {
+            products.splice(index, 1);
+            localStorage.setItem('store_products', JSON.stringify(products));
+            renderAdminProducts();
+        }
+
+        updateCategoryDropdown();
+        renderAdminProducts();
+    </script>
 </body>
 </html>
